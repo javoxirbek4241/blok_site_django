@@ -22,6 +22,11 @@ def category(request, pk):
     news = News.objects.filter(category=category).order_by('-id')
     return render(request, 'category-01.html', {'news': news})
 
+def news_detail(request, pk):
+    post = News.objects.get(pk=pk)
+    return render(request, 'blog-detail-01.html', {'post':post})
+
+
 
 
 
