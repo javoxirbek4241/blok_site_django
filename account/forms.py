@@ -32,9 +32,19 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=120, label='username')
     password = forms.CharField(label='parol', widget=forms.PasswordInput)
 
+class ChangePassForm(forms.Form):
+    old_pass = forms.CharField(label='eski parol', widget=forms.PasswordInput)
+    new_pass = forms.CharField(label='new parol', widget=forms.PasswordInput)
+    confirm_pass = forms.CharField(label='parolni tasdiqlang', widget=forms.PasswordInput)
+    code = forms.CharField(label='emailga yuborilgan kod', max_length=6)
 
-
-
+    def clean(self):
+        cleaned_data = super().clean()
+        new_pass = self.cleaned_data['new_pass']
+        confirm_pass = self.cleaned_data['confirm_pass']
+        if new_pass!=confirm_pass:
+            raise forms.ValidationError('parollar mos emas')
+        return cleaned_data
 
 
 

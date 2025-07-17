@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import *
 def index(request):
@@ -26,18 +27,7 @@ def news_detail(request, pk):
     post = News.objects.get(pk=pk)
     return render(request, 'blog-detail-01.html', {'post':post})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@login_required(login_url='login')
+def profile(request):
+    user = User.objects.get(username=request.user.username)
+    return render(request, 'account/profile.html', {'user': user})

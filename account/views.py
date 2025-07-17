@@ -2,7 +2,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, ChangePassForm
+from .utils import generate_code, send_to_mail
 
 # def signup_view(request):
 #     if request.method == 'POST':
@@ -98,13 +99,35 @@ def signup_view(request):
         form = SignUpForm()
     return render(request, 'account/signup.html', {'form': form})
 
+def change_pass_view(request):
+    if request.method == 'GET':
+        code = generate_code()
+        request.session['verification_code'] = code
+        send_to_mail(request.user.email, code)
+        messages.info(request, 'kod yuborildi')
+        form = ChangePassForm()
+        return render(request, 'account/change_pass.html', {'form':form})
 
+    else:
+        form = ChangePassForm(request.POST)
+        if form.is_valid():
+            old_pass = form.cleaned_data['old_pass']
+            new_pass = form.cleaned_data['new_pass']
+            code = form.cleaned_data['code']
+            session_code = request.session.get('verification_code')
 
+            if not request.user.check_password(old_pass):
+                messages.error(request, 'eski parolni xato kiritdingiz')
+                return redirect('change-pass')
+            if session_code!=code:
+                messages.error(request, 'kod xato')
+                return redirect('change-pass')
+            user = request.user
+            user.set_password(new_pass)
+            user.save()
+            messages.success(request, 'parolingiz ozgartirildi')
 
-
-
-
-
+            return redirect('profile')
 
 
 
