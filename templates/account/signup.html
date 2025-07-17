@@ -21,30 +21,7 @@
 
             <form method="post">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">Foydalanuvchi nomi</label>
-                    <input type="text" name="username" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Ismingiz</label>
-                    <input type="text" name="first_name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Familiyangiz</label>
-                    <input type="text" name="last_name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email manzilingiz</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Parol</label>
-                    <input type="password" name="password1" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Parolni qayta kiriting</label>
-                    <input type="password" name="password2" class="form-control" required>
-                </div>
+                {{ form.as_p }}
                 <button type="submit" class="btn btn-primary w-100">Ro‘yxatdan o‘tish</button>
                 <p class="mt-3 text-center">Allaqachon hisobingiz bormi? <a href="{% url 'login' %}">Kirish</a></p>
             </form>
