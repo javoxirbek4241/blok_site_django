@@ -160,6 +160,10 @@ def reset_pass2(request):
             username = request.session.get('username')
             created_at = request.session.get('created_at')
 
+            if session_code!=code:
+                messages.error(request, 'kod xato')
+                return redirect('change-pass')
+
             if created_at:
                 created_at = datetime.fromisoformat(created_at)
                 if datetime.now() - created_at > timedelta(minutes=1):
