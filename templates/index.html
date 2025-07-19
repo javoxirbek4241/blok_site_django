@@ -246,6 +246,14 @@
 						<a class="logo-stick" href="index.html">
 							<img src="{%static 'images/icons/logo-01.png'%}" alt="LOGO">
 						</a>
+						{% for news in news_list %}
+  <div class="news-item">
+    <h3>{{ news.title }}</h3>
+    <p>{{ news.summary }}</p>
+    <a href="{% url 'news_detail' pk=news.pk %}">Batafsil o'qish</a>
+  </div>
+{% endfor %}
+
 
 						<ul class="main-menu">
 							<li class="main-menu-active">

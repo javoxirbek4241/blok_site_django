@@ -2,6 +2,13 @@
 <html lang="en">
 {% load static %}
 <head>
+		{% if messages %}
+		{% for message in messages %}
+			<div class="alert alert-{{ message.tags }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endif %}
 	<title>Blog Detail With Sidebar</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -2395,76 +2402,41 @@
 							</div>
 						</div>
 
-						<!-- Leave a comment -->
-						<div>
-							<h4 class="f1-l-4 cl3 p-b-12">
-								Leave a Comment
-							</h4>
+<!-- Leave a Comment -->
+<div>
+    <h4 class="f1-l-4 cl3 p-b-12">Leave a Comment</h4>
 
-							<p class="f1-s-13 cl8 p-b-40">
-								Your email address will not be published. Required fields are marked *
-							</p>
+    <p class="f1-s-13 cl8 p-b-40">
+        Your email address will not be published. Required fields are marked *
+    </p>
 
-							<form>
-								<textarea class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20" name="msg" placeholder="Comment..."></textarea>
+    <form method="post">
+        {% csrf_token %}
+        <textarea class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20"
+                  name="msg"
+                  placeholder="Comment..."></textarea>
 
-								<input class="bo-1-rad-3 bocl13 size-a-16 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text" name="name" placeholder="Name*">
+        <button type="submit"
+                class="size-a-17 bg2 borad-3 f1-s-12 cl0 hov-btn1 trans-03 p-rl-15 m-t-10">
+            Post Comment
+        </button>
+    </form>
+</div>
 
-								<input class="bo-1-rad-3 bocl13 size-a-16 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text" name="email" placeholder="Email*">
+<!-- Comments section -->
+<div class="p-t-40">
+    <h4 class="f1-l-4 cl3 p-b-12">Fikrlar</h4>
+    <ul>
+        {% for comment in comments %}
+            <li class="p-b-10">
+                <strong>{{ comment.user.username }}</strong>: {{ comment.pos_text }}
+            </li>
+        {% empty %}
+            <li>Hozircha fikrlar yo‘q.</li>
+        {% endfor %}
+    </ul>
+</div>
 
-								<input class="bo-1-rad-3 bocl13 size-a-16 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text" name="website" placeholder="Website">
-
-								<button class="size-a-17 bg2 borad-3 f1-s-12 cl0 hov-btn1 trans-03 p-rl-15 m-t-10">
-									Post Comment
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Sidebar -->
-				<div class="col-md-10 col-lg-4 p-b-30">
-					<div class="p-l-10 p-rl-0-sr991 p-t-70">						
-						<!-- Category -->
-						<div class="p-b-60">
-							<div class="how2 how2-cl4 flex-s-c">
-								<h3 class="f1-m-2 cl3 tab01-title">
-									Category
-								</h3>
-							</div>
-
-							<ul class="p-t-35">
-								<li class="how-bor3 p-rl-4">
-									<a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-										Fashion
-									</a>
-								</li>
-
-								<li class="how-bor3 p-rl-4">
-									<a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-										Beauty
-									</a>
-								</li>
-
-								<li class="how-bor3 p-rl-4">
-									<a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-										Street Style
-									</a>
-								</li>
-
-								<li class="how-bor3 p-rl-4">
-									<a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-										Life Style
-									</a>
-								</li>
-
-								<li class="how-bor3 p-rl-4">
-									<a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-										DIY & Crafts
-									</a>
-								</li>
-							</ul>
-						</div>
 
 						<!-- Archive -->
 						<div class="p-b-37">

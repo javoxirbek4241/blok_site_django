@@ -131,6 +131,8 @@ def change_pass_view(request):
             return redirect('profile')
         return redirect('change-pass')
 
+from datetime import datetime,timedelta
+
 def reset_pass(request):
     if request.method == 'POST':
         try:
@@ -139,6 +141,8 @@ def reset_pass(request):
             code = generate_code()
             request.session['reset_code'] = code
             request.session['username'] = username
+            request.session['created_at'] = datetime.now().isoformat()
+
 
             send_to_mail(user.email, code)
             return redirect('reset2')
@@ -154,10 +158,13 @@ def reset_pass2(request):
             code = form.cleaned_data['code']
             session_code = request.session.get('reset_code')
             username = request.session.get('username')
+            created_at = request.session.get('created_at')
 
-            if session_code != code:
-                messages.error(request, 'Tasdiqlash kodi noto‘g‘ri.')
-                return redirect('reset2')
+            if created_at:
+                created_at = datetime.fromisoformat(created_at)
+                if datetime.now() - created_at > timedelta(minutes=1):
+                    messages.info(request, 'Tasdiqlash kodi eskirgan.')
+                    return redirect('reset2')
 
             try:
                 user = User.objects.get(username=username)
