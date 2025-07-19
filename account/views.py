@@ -1,8 +1,8 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import SignUpForm, LoginForm, ChangePassForm
+from .forms import SignUpForm, LoginForm, ChangePassForm,ResetPassForm
 from .utils import generate_code, send_to_mail
 
 # def signup_view(request):
@@ -126,12 +126,54 @@ def change_pass_view(request):
             user.set_password(new_pass)
             user.save()
             messages.success(request, 'parolingiz ozgartirildi')
-
+            update_session_auth_hash(request, user)
+            del request.session['verification_code']
             return redirect('profile')
+        return redirect('change-pass')
 
+def reset_pass(request):
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            user = User.objects.get(username=username)
+            code = generate_code()
+            request.session['reset_code'] = code
+            request.session['username'] = username
 
+            send_to_mail(user.email, code)
+            return redirect('reset2')
+        except User.DoesNotExist:
+            return render(request, 'account/reset-pass1.html')
+    return render(request, 'account/reset-pass1.html')
 
+def reset_pass2(request):
+    if request.method == 'POST':
+        form = ResetPassForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            code = form.cleaned_data['code']
+            session_code = request.session.get('reset_code')
+            username = request.session.get('username')
 
+            if session_code != code:
+                messages.error(request, 'Tasdiqlash kodi noto‘g‘ri.')
+                return redirect('reset2')
+
+            try:
+                user = User.objects.get(username=username)
+                user.set_password(password)
+                user.save()
+                messages.success(request, 'Parolingiz muvaffaqiyatli o‘zgartirildi.')
+                del request.session['reset_code']
+                del request.session['username']
+                return redirect('login')
+            except User.DoesNotExist:
+                messages.error(request, 'Foydalanuvchi topilmadi.')
+                return redirect('reset')
+    else:
+        form = ResetPassForm()
+
+    return render(request, 'account/reset-pass2.html', {'form': form})
 
 
 

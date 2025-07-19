@@ -1,6 +1,6 @@
 import string, random
 from django.core.mail import send_mail
-from conf.settings import DEFAULT_FROM_EMAIL
+# from conf.settings import DEFAULT_FROM_EMAIL
 
 def generate_code():
     letters = string.ascii_letters + string.digits
@@ -11,5 +11,5 @@ def send_to_mail(email, code):
 
     send_mail(subject=subject,
     message=message,
-    from_email=DEFAULT_FROM_EMAIL,
+    from_email=None,
     recipient_list=[email, ])

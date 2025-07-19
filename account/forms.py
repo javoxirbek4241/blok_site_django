@@ -47,6 +47,20 @@ class ChangePassForm(forms.Form):
         return cleaned_data
 
 
+class ResetPassForm(forms.ModelForm):
+    password = forms.CharField(label='yangi parol',  widget=forms.PasswordInput)
+    password_confirm = forms.CharField(label='parolni tasdiqlang',  widget=forms.PasswordInput)
+    code = forms.CharField(label='tasdiqlash kodini kiriting',  max_length=6)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = self.cleaned_data['password']
+        password_confirm = self.cleaned_data['password_confirm']
+        if password!=password_confirm:
+            raise forms.ValidationError('parollar mos emas')
+        return cleaned_data
+
+
 
 
 

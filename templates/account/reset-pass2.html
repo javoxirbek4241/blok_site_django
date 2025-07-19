@@ -1,0 +1,44 @@
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin: auto; padding-top: 50px;">
+    <h2>Parolni tiklash</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="get">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_password">Yangi parol</label>
+            <input type="password" name="password" class="form-control" id="id_password" placeholder="Yangi parol kiriting">
+            {% if form.password.errors %}
+                <small class="text-danger">{{ form.password.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="id_password_confirm">Parolni tasdiqlang</label>
+            <input type="password" name="password_confirm" class="form-control" id="id_password_confirm" placeholder="Parolni qayta kiriting">
+            {% if form.password_confirm.errors %}
+                <small class="text-danger">{{ form.password_confirm.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="id_code">Tasdiqlash kodi</label>
+            <input type="text" name="code" class="form-control" id="id_code" placeholder="Kodni kiriting">
+            {% if form.code.errors %}
+                <small class="text-danger">{{ form.code.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Parolni tiklash</button>
+    </form>
+</div>
+{% endblock %}
